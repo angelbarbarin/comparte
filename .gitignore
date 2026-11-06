@@ -7,8 +7,8 @@ __pycache__/
 .ruff_cache/
 *.egg-info/
 
-# Datos locales de ejecución (base SQLite, fotos subidas)
-data/
+# Datos locales de ejecución (base SQLite, fotos subidas); solo la carpeta de la raíz
+/data/
 
 # Secretos y configuración local
 .env

@@ -1,0 +1,739 @@
+{
+  "_nota": "Mensajes de donantes escritos por el EQUIPO para medir al Captador. No son datos reales: validarlos con mensajes de donantes de verdad es una tarea pendiente. 'esperado' = [clave del catálogo, cantidad, unidad canónica]. LOTE A: se usó para corregir el motor de reglas (resultado optimista). LOTE B: escrito DESPUÉS de esas correcciones y sin retocar el motor con él (estimación menos sesgada); incluye casos difíciles a propósito.",
+  "casos": [
+    {
+      "texto": "Hola buenas, me sobraron 15 kilos de tortillas del día",
+      "esperado": [
+        [
+          "tortilla",
+          15,
+          "kg"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "Tenemos 3 cajas de jitomate y 2 de cebolla",
+      "esperado": [
+        [
+          "verdura",
+          3,
+          "caja"
+        ],
+        [
+          "verdura",
+          2,
+          "caja"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "50 bolillos y 20 conchas",
+      "esperado": [
+        [
+          "pan",
+          50,
+          "pieza"
+        ],
+        [
+          "pan",
+          20,
+          "pieza"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "Sobraron 8 kg de arroz y 5 kg de frijol",
+      "esperado": [
+        [
+          "abarrotes",
+          8,
+          "kg"
+        ],
+        [
+          "abarrotes",
+          5,
+          "kg"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "pan: 30 piezas",
+      "esperado": [
+        [
+          "pan",
+          30,
+          "pieza"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "Tengo como 20 litros de leche, vence mañana",
+      "esperado": [
+        [
+          "lacteos",
+          20,
+          "l"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "una caja de manzanas",
+      "esperado": [
+        [
+          "fruta",
+          1,
+          "caja"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "2 costales de papa",
+      "esperado": [
+        [
+          "verdura",
+          2,
+          "costal"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "tres charolas de pan dulce y una de bolillos",
+      "esperado": [
+        [
+          "pan",
+          3,
+          "charola"
+        ],
+        [
+          "pan",
+          1,
+          "charola"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "Hay 10 kg de pechuga de pollo congelada",
+      "esperado": [
+        [
+          "pollo",
+          10,
+          "kg"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "15 kg de verdura variada (zanahoria, calabaza, chayote)",
+      "esperado": [
+        [
+          "verdura",
+          15,
+          "kg"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "quiero donar 40 kilos de naranja",
+      "esperado": [
+        [
+          "fruta",
+          40,
+          "kg"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "Me quedaron 12 pizzas",
+      "esperado": [
+        [
+          "preparado",
+          12,
+          "pieza"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "25 kg de arroz con pollo",
+      "esperado": [
+        [
+          "preparado",
+          25,
+          "kg"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "Tengo 5 bolsas de pan de caja",
+      "esperado": [
+        [
+          "pan",
+          5,
+          "bolsa"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "100 tortillas",
+      "esperado": [
+        [
+          "tortilla",
+          100,
+          "pieza"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "dos docenas de huevo",
+      "esperado": [
+        [
+          "huevo",
+          2,
+          "docena"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "80 kg de fruta entre mango y papaya",
+      "esperado": [
+        [
+          "fruta",
+          80,
+          "kg"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "Sobró comida preparada para 30 personas",
+      "esperado": [
+        [
+          "preparado",
+          30,
+          "porcion"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "8 kg de yogurt y 4 kg de queso, refrigerados",
+      "esperado": [
+        [
+          "lacteos",
+          8,
+          "kg"
+        ],
+        [
+          "lacteos",
+          4,
+          "kg"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "tenemos 200 piezas de pan dulce",
+      "esperado": [
+        [
+          "pan",
+          200,
+          "pieza"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "3 kg de atún en lata",
+      "esperado": [
+        [
+          "abarrotes",
+          3,
+          "kg"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "Hola, soy el gerente. Tenemos 60 kg de verdura que ya no vamos a vender hoy",
+      "esperado": [
+        [
+          "verdura",
+          60,
+          "kg"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "20 kilos de pan",
+      "esperado": [
+        [
+          "pan",
+          20,
+          "kg"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "buenas tardes, 12 cajas de lechuga",
+      "esperado": [
+        [
+          "verdura",
+          12,
+          "caja"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "2 toneladas de naranja",
+      "esperado": [
+        [
+          "fruta",
+          2,
+          "ton"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "500 gramos de queso",
+      "esperado": [
+        [
+          "lacteos",
+          500,
+          "g"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "1.5 kg de carne molida",
+      "esperado": [
+        [
+          "res",
+          1.5,
+          "kg"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "sobraron 70 tamales",
+      "esperado": [
+        [
+          "preparado",
+          70,
+          "pieza"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "Tengo 4 cajas de refresco y 2 de agua",
+      "esperado": [
+        [
+          "bebidas",
+          4,
+          "caja"
+        ],
+        [
+          "bebidas",
+          2,
+          "caja"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "35 pzas de pan dulce",
+      "esperado": [
+        [
+          "pan",
+          35,
+          "pieza"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "10 kilos de mango y 10 kilos de papaya",
+      "esperado": [
+        [
+          "fruta",
+          10,
+          "kg"
+        ],
+        [
+          "fruta",
+          10,
+          "kg"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "Dos bolsas de zanahoria",
+      "esperado": [
+        [
+          "verdura",
+          2,
+          "bolsa"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "tengo 5 litros de jugo",
+      "esperado": [
+        [
+          "bebidas",
+          5,
+          "l"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "1 kilo de chorizo",
+      "esperado": [
+        [
+          "embutidos",
+          1,
+          "kg"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "30 hamburguesas",
+      "esperado": [
+        [
+          "preparado",
+          30,
+          "pieza"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "Me sobraron 6 tortas",
+      "esperado": [
+        [
+          "preparado",
+          6,
+          "pieza"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "Hay 45 kg de aguacate, caduca en 2 días",
+      "esperado": [
+        [
+          "fruta",
+          45,
+          "kg"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "sobraron 3 cajas de uva y 4 de fresa",
+      "esperado": [
+        [
+          "fruta",
+          3,
+          "caja"
+        ],
+        [
+          "fruta",
+          4,
+          "caja"
+        ]
+      ],
+      "lote": "A"
+    },
+    {
+      "texto": "Buenas noches, nos sobraron 8 kg de queso y 6 kg de crema",
+      "esperado": [
+        [
+          "lacteos",
+          8,
+          "kg"
+        ],
+        [
+          "lacteos",
+          6,
+          "kg"
+        ]
+      ],
+      "lote": "B"
+    },
+    {
+      "texto": "tengo 2 cajas de pan de caja y 1 caja de galletas",
+      "esperado": [
+        [
+          "pan",
+          2,
+          "caja"
+        ],
+        [
+          "abarrotes",
+          1,
+          "caja"
+        ]
+      ],
+      "lote": "B"
+    },
+    {
+      "texto": "hay 25 kilos de papa y 10 de cebolla",
+      "esperado": [
+        [
+          "verdura",
+          25,
+          "kg"
+        ],
+        [
+          "verdura",
+          10,
+          "kg"
+        ]
+      ],
+      "lote": "B"
+    },
+    {
+      "texto": "me sobraron 30 empanadas",
+      "esperado": [
+        [
+          "desconocido",
+          30,
+          "pieza"
+        ]
+      ],
+      "lote": "B"
+    },
+    {
+      "texto": "tenemos 12 kg de plátano y 6 kg de limón",
+      "esperado": [
+        [
+          "fruta",
+          12,
+          "kg"
+        ],
+        [
+          "fruta",
+          6,
+          "kg"
+        ]
+      ],
+      "lote": "B"
+    },
+    {
+      "texto": "ofrezco 5 kilos de espinaca",
+      "esperado": [
+        [
+          "verdura",
+          5,
+          "kg"
+        ]
+      ],
+      "lote": "B"
+    },
+    {
+      "texto": "3 bolsas de tortillas y 2 de totopos",
+      "esperado": [
+        [
+          "tortilla",
+          3,
+          "bolsa"
+        ],
+        [
+          "desconocido",
+          2,
+          "bolsa"
+        ]
+      ],
+      "lote": "B"
+    },
+    {
+      "texto": "30 litros de leche, vence hoy",
+      "esperado": [
+        [
+          "lacteos",
+          30,
+          "l"
+        ]
+      ],
+      "lote": "B"
+    },
+    {
+      "texto": "hay 15 kg de carne de res y 10 kg de pollo",
+      "esperado": [
+        [
+          "res",
+          15,
+          "kg"
+        ],
+        [
+          "pollo",
+          10,
+          "kg"
+        ]
+      ],
+      "lote": "B"
+    },
+    {
+      "texto": "sobraron 4 charolas de ensalada",
+      "esperado": [
+        [
+          "preparado",
+          4,
+          "charola"
+        ]
+      ],
+      "lote": "B"
+    },
+    {
+      "texto": "Les regalo 60 piezas de pan",
+      "esperado": [
+        [
+          "pan",
+          60,
+          "pieza"
+        ]
+      ],
+      "lote": "B"
+    },
+    {
+      "texto": "una caja de tomate verde",
+      "esperado": [
+        [
+          "verdura",
+          1,
+          "caja"
+        ]
+      ],
+      "lote": "B"
+    },
+    {
+      "texto": "Quedaron 7 kg de tortilla y como 3 kg de pan",
+      "esperado": [
+        [
+          "tortilla",
+          7,
+          "kg"
+        ],
+        [
+          "pan",
+          3,
+          "kg"
+        ]
+      ],
+      "lote": "B"
+    },
+    {
+      "texto": "tengo 2 charolas de gelatina y 40 kg de arroz",
+      "esperado": [
+        [
+          "desconocido",
+          2,
+          "charola"
+        ],
+        [
+          "abarrotes",
+          40,
+          "kg"
+        ]
+      ],
+      "lote": "B"
+    },
+    {
+      "texto": "sobraron unas 5 cajas de jitomate",
+      "esperado": [
+        [
+          "verdura",
+          5,
+          "caja"
+        ]
+      ],
+      "lote": "B"
+    },
+    {
+      "texto": "18 kilos de pollo y 3 docenas de huevo",
+      "esperado": [
+        [
+          "pollo",
+          18,
+          "kg"
+        ],
+        [
+          "huevo",
+          3,
+          "docena"
+        ]
+      ],
+      "lote": "B"
+    },
+    {
+      "texto": "Hola! hay 22 kg de fruta, mango sobre todo",
+      "esperado": [
+        [
+          "fruta",
+          22,
+          "kg"
+        ]
+      ],
+      "lote": "B"
+    },
+    {
+      "texto": "kilo y medio de jamón",
+      "esperado": [
+        [
+          "embutidos",
+          1.5,
+          "kg"
+        ]
+      ],
+      "lote": "B"
+    },
+    {
+      "texto": "cinco cajas de leche",
+      "esperado": [
+        [
+          "lacteos",
+          5,
+          "caja"
+        ]
+      ],
+      "lote": "B"
+    },
+    {
+      "texto": "Tenemos 90 bolillos sin vender",
+      "esperado": [
+        [
+          "pan",
+          90,
+          "pieza"
+        ]
+      ],
+      "lote": "B"
+    }
+  ]
+}
