@@ -1,0 +1,7 @@
+# Finales de línea consistentes entre Windows, macOS y Linux (evita diffs enormes por CRLF/LF).
+* text=auto eol=lf
+*.docx binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary

@@ -27,6 +27,7 @@ def main(argv: list[str] | None = None) -> None:
     servir.add_argument("--puerto", type=int, default=8000)
     servir.add_argument("--hora-demo", metavar="HH:MM", help="Fija la hora de la aplicación (útil para grabar a cualquier hora)")
     servir.add_argument("--reiniciar", action="store_true", help="Borra y recarga los datos de prueba antes de arrancar")
+    servir.add_argument("--sin-historial", action="store_true", help="Con --reiniciar: no carga los rescates históricos simulados")
 
     reinicio = sub.add_parser("reiniciar", help="Borra la base y recarga el piloto simulado")
     reinicio.add_argument("--sin-historial", action="store_true", help="No carga los rescates históricos simulados")
