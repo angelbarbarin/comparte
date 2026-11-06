@@ -5,8 +5,8 @@
 | # | Entregable | Estado | Dónde |
 |---|---|---|---|
 | 1 | Video de la demo con el proyecto funcionando | ⏳ **Por grabar** | Instrucciones en [`GUION_VIDEO.md`](GUION_VIDEO.md) |
-| 2 | Entrada de texto describiendo el entregable | ✅ Borrador abajo | Sección siguiente |
-| 3 | Liga al Git con código y documentación | ✅ | `REPO_URL` (ver sección “Enlaces”) |
+| 2 | Entrada de texto describiendo el entregable |  ✅ Borrador abajo | Sección siguiente |
+| 3 | Liga al Git con código y documentación | ✅ | <https://github.com/angelbarbarin/comparte> |
 
 ## Entrada de texto (lista para pegar)
 
@@ -42,18 +42,18 @@
 > **Siguientes pasos hasta el 24 de noviembre:** diagramas UML, video con todos los casos de uso, validación con un banco de alimentos,
 > costo de WhatsApp, prueba con Claude real y autenticación por roles.
 >
-> **Video:** `VIDEO_URL` · **Código y documentación:** `REPO_URL`
+> **Video:** `VIDEO_URL` · **Código y documentación:** <https://github.com/angelbarbarin/comparte>
 
 ## Enlaces
 
-- **Repositorio (código y documentación):** `REPO_URL`
+- **Repositorio (código y documentación):** <https://github.com/angelbarbarin/comparte>
 - **Video de la demo:** `VIDEO_URL` (pendiente de grabar)
 
 ## Lista de verificación antes de entregar
 
 - [ ] `pytest` pasa en limpio y el README funciona siguiendo solo sus instrucciones (pruébenlo en otra computadora o carpeta).
 - [ ] El video muestra el recorrido de [`GUION_VIDEO.md`](GUION_VIDEO.md) y abre en una ventana de incógnito.
-- [ ] La entrada de texto tiene las ligas reales (sustituyan `REPO_URL` y `VIDEO_URL`).
+- [ ] La entrada de texto tiene las ligas reales (sustituyan `VIDEO_URL` por la liga real del video).
 - [ ] El repositorio es accesible para el profesor (público, o privado con acceso concedido).
 - [ ] No hay claves, `.env` ni datos personales en el historial de git (`git log -p | findstr /i "sk-ant-"` no debe encontrar nada).
 

@@ -109,7 +109,7 @@ Cumple lo prometido en el alcance del documento de visión (≥ 10 donantes y �
 | 3 | Se recorren sin errores los escenarios del guion de video | ✅ | Recorridos reales en el navegador integrado y por API: rescate feliz, rechazo con reasignación, riesgo con aprobación humana, vencimiento de oferta y bloqueo por alcohol |
 | 4 | Cada decisión de cada agente aparece en la bitácora de la donación | ✅ | `test_orquestador.py` y vista *Seguimiento* |
 | 5 | El tablero refleja el rescate recién completado | ✅ | `test_api.py` y vista *Impacto* |
-| 6 | El repositorio está en línea con README, documentación, licencia e historial legible | ✅ si ves esta página en GitHub | — |
+| 6 | El repositorio está en línea con README, documentación, licencia e historial legible | ✅ publicado en https://github.com/angelbarbarin/comparte | — |
 
 **Lo que el MVP no pudo verificar** (y por qué):
 
