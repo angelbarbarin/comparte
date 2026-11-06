@@ -182,6 +182,7 @@ class TestRechazoYReasignacion:
             v.disponible = True
         orq.reintentar(d.id)
         assert recoleccion_propuesta(db, d) is not None
+        assert d.estado == EstadoDonacion.ASIGNADA  # ya no figura como "sin voluntario"
 
 
 class TestSupervisionHumana:

@@ -190,6 +190,8 @@ class AgenteLogistico:
             creada_en=ahora, vence_en=ahora + timedelta(minutes=self.ajustes.vigencia_recoleccion_min),
         )
         self.db.add(recoleccion)
+        if donacion.estado == EstadoDonacion.SIN_VOLUNTARIO:  # reintento exitoso: ya hay propuesta en curso
+            donacion.estado = EstadoDonacion.ASIGNADA
         self.db.flush()
         registrar_evento(
             self.db, self.nombre, "recoleccion_propuesta" if not previas else "recoleccion_reasignada",
