@@ -58,7 +58,7 @@ class TestRegistroFeliz:
         assert "25 kg de pan dulce" in resumen and "10 kg de fruta" in resumen
         assert "Total: 35 kg" in resumen
         assert "Caduca: hoy 23:59" in resumen and "(estimado)" not in resumen.split("Caduca:")[1].split("\n")[0]
-        assert "Recolección: hoy 20:00" in resumen
+        assert "Recolección: hoy 20:00 a 23:00" in resumen
         assert db.scalar(select(Donacion.id)) is None  # aún no se registra: falta confirmar
 
         resultado = decir(db, captador, conv, "sí")

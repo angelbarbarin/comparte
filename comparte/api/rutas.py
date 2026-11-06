@@ -22,6 +22,7 @@ from sqlalchemy import Engine, select
 from sqlalchemy.orm import Session, sessionmaker
 
 from .. import __version__, reloj
+from ..agentes.coordinador import PESOS
 from ..config import Ajustes
 from ..datos_demo import reiniciar_demo
 from ..db import sesion_por_peticion
@@ -108,6 +109,7 @@ def construir_router(ctx: Contexto) -> APIRouter:
             "hora": reloj.ahora().isoformat(timespec="seconds"), "reloj_de_demo": reloj.hay_desfase(),
             "vigencia_oferta_min": ctx.ajustes.vigencia_oferta_min,
             "vigencia_recoleccion_min": ctx.ajustes.vigencia_recoleccion_min,
+            "pesos_asignacion": PESOS,  # la interfaz los usa para dibujar el desglose del puntaje
         }
 
     # ------------------------------------------------------------------ catálogos de actores

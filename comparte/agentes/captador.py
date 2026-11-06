@@ -275,8 +275,9 @@ class AgenteCaptador:
                       + (" (peso estimado; corrígelo si no es correcto)" if estimado else ""))
         caduca = fmt_momento(de_iso(b["caduca_en"]), ahora)
         lineas.append(f"Caduca: {caduca}" + (" (estimado)" if b["caducidad_estimada"] else ""))
-        lineas.append(f"Recolección: {fmt_momento(de_iso(b['recoleccion_desde']), ahora)} a "
-                      f"{fmt_momento(de_iso(b['recoleccion_hasta']), ahora)}")
+        desde, hasta = de_iso(b["recoleccion_desde"]), de_iso(b["recoleccion_hasta"])
+        fin = f"{hasta:%H:%M}" if hasta.date() == desde.date() else fmt_momento(hasta, ahora)
+        lineas.append(f"Recolección: {fmt_momento(desde, ahora)} a {fin}")
         if ev.requiere_revision:
             lineas.append("⚠ Incluye alimentos de riesgo: una persona del equipo lo revisará antes de asignarlo.")
         lineas += [f"⚠ {a}" for a in ev.advertencias]
