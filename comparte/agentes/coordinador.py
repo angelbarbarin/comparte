@@ -204,10 +204,11 @@ class AgenteCoordinador:
                 "capacidad": capacidad, "equidad": equidad}
 
     # ------------------------------------------------------------------ ciclo de la oferta
-    def ofrecer(self, donacion: Donacion) -> Oferta | None:
+    def ofrecer(self, donacion: Donacion, reiniciar: bool = False) -> Oferta | None:
         """Ofrece la donación al mejor receptor viable que aún no la haya rechazado/omitido.
 
         Si no queda ninguno, la donación pasa a ``SIN_RECEPTOR`` (requiere atención del administrador).
+        Con ``reiniciar=True`` (reintento del administrador) se ignoran los rechazos anteriores.
         """
         ahora = reloj.ahora()
         # Se consulta la base (no la colección ``donacion.ofertas``, que puede estar desactualizada).
@@ -217,7 +218,7 @@ class AgenteCoordinador:
                 Oferta.estado.in_((EstadoOferta.RECHAZADA, EstadoOferta.EXPIRADA)),
             )
         ))
-        excluir = {o.receptor_id for o in previas}
+        excluir = set() if reiniciar else {o.receptor_id for o in previas}
         candidatos = self.evaluar_receptores(donacion, excluir)
         donacion.evaluacion = {
             "evaluado_en": a_iso(ahora), "ronda": len(previas) + 1,

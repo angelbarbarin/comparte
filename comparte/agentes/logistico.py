@@ -149,8 +149,11 @@ class AgenteLogistico:
         return candidatos
 
     # ------------------------------------------------------------------ ciclo de la recolección
-    def proponer(self, donacion: Donacion) -> Recoleccion | None:
-        """Propone la recolección al mejor voluntario que no la haya rechazado/omitido."""
+    def proponer(self, donacion: Donacion, reiniciar: bool = False) -> Recoleccion | None:
+        """Propone la recolección al mejor voluntario que no la haya rechazado/omitido.
+
+        Con ``reiniciar=True`` (reintento del administrador) se ignoran los rechazos anteriores.
+        """
         ahora = reloj.ahora()
         previas = list(self.db.scalars(
             select(Recoleccion).where(
@@ -158,7 +161,9 @@ class AgenteLogistico:
                 Recoleccion.estado.in_((EstadoRecoleccion.RECHAZADA, EstadoRecoleccion.EXPIRADA)),
             )
         ))
-        candidatos = self.evaluar_voluntarios(donacion, {p.voluntario_id for p in previas})
+        candidatos = self.evaluar_voluntarios(
+            donacion, set() if reiniciar else {p.voluntario_id for p in previas}
+        )
         viables = [c for c in candidatos if c.viable]
         if not viables:
             donacion.estado = EstadoDonacion.SIN_VOLUNTARIO

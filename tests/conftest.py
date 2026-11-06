@@ -25,6 +25,16 @@ def reloj_congelado():
 
 
 @pytest.fixture
+def ajustes_prueba(tmp_path):
+    """Ajustes aislados: motor de reglas, sin clave de API y carpeta de datos temporal."""
+    from comparte.config import Ajustes, obtener_ajustes
+
+    base = obtener_ajustes()
+    return Ajustes(**{**base.__dict__, "carpeta_datos": tmp_path, "modo_llm": "reglas", "api_key": None,
+                      "hora_demo": None})
+
+
+@pytest.fixture
 def motor():
     motor = crear_motor("sqlite://")
     crear_tablas(motor)
