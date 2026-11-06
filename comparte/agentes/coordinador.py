@@ -283,6 +283,7 @@ class AgenteCoordinador:
             oferta.estado = EstadoOferta.ACEPTADA
             donacion.estado = EstadoDonacion.ASIGNADA
             donacion.receptor_id = oferta.receptor_id
+            donacion.receptor = oferta.receptor  # mantiene la relación al día para el Logístico
             donacion.asignada_en = ahora
             registrar_evento(
                 self.db, Agente.COORDINADOR, "oferta_aceptada",
