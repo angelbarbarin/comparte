@@ -115,7 +115,7 @@ Cumple lo prometido en el alcance del documento de visión (≥ 10 donantes y �
 
 - El motor **Claude** contra la API real (no había clave): solo pruebas con cliente simulado.
 - La interfaz en **Safari y Firefox** (solo se probó en el navegador integrado, basado en Chromium) y en móvil real (se probó a 375 px emulados).
-- El `demo.sh` de macOS/Linux y la integración continua de GitHub Actions (se escribieron, no se ejecutaron aquí).
+- El `demo.sh` de macOS/Linux (se escribió, no se ejecutó). La integración continua de GitHub Actions **sí corrió** y pasó (ejecución #1, 30 s).
 - Rendimiento y escalabilidad (500 donaciones diarias, 20 conversaciones simultáneas).
 - Cualquier cifra frente a datos y usuarios reales.
 
