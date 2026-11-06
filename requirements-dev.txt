@@ -1,0 +1,4 @@
+-r requirements.txt
+pytest==9.2.0
+# Cliente que usa TestClient de FastAPI en las pruebas de la API.
+httpx==0.28.1

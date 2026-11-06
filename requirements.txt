@@ -1,0 +1,9 @@
+# Dependencias de ejecución de ComParte (versiones con las que se probó el MVP, Python 3.13).
+fastapi==0.162.0
+uvicorn==0.54.0
+SQLAlchemy==2.1.8
+python-dotenv==1.2.4
+# Zona horaria America/Mexico_City en Windows (no trae base de zonas del sistema).
+tzdata==2026.6
+# Solo se usa en el modo Claude (COMPARTE_LLM=claude o ANTHROPIC_API_KEY definida).
+anthropic==2.6.0
