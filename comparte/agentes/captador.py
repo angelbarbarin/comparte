@@ -243,8 +243,10 @@ class AgenteCaptador:
 
         if ev.confirmar_frio:
             b["pendiente"] = "cadena_frio"
-            frios = ", ".join(i["nombre"] for i in b["items"] if i["almacenamiento"] == "refrigerado")
-            return responder(f"{frios.capitalize()} necesita cadena de frío. ¿Se mantuvo refrigerado todo el "
+            frios = [i["nombre"] for i in b["items"] if i["almacenamiento"] == "refrigerado"]
+            lista = frios[0] if len(frios) == 1 else f"{', '.join(frios[:-1])} y {frios[-1]}"
+            verbo = "necesita" if len(frios) == 1 else "necesitan"
+            return responder(f"{lista.capitalize()} {verbo} cadena de frío. ¿Se mantuvo refrigerado todo el "
                              "tiempo? Responde «sí» o «no».")
 
         b["etapa"], b["pendiente"] = "confirmando", None

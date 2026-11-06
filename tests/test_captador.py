@@ -141,6 +141,10 @@ class TestInocuidadEnLaConversacion:
         assert d.inocuidad["requiere_revision"] is True and d.requiere_frio is True
         assert d.inocuidad["nivel"] == "alto"
 
+    def test_la_pregunta_de_frio_concuerda_en_numero_con_varios_alimentos(self, db, captador, conv):
+        decir(db, captador, conv, "Tengo 12 kg de pollo y 8 litros de leche")
+        assert "Pollo y leche necesitan cadena de frío" in ultimo(conv)
+
     def test_cadena_de_frio_rota_bloquea(self, db, captador, conv):
         decir(db, captador, conv, "12 kg de pollo")
         resultado = decir(db, captador, conv, "no")
