@@ -73,7 +73,7 @@ KPIs de proceso (contra los rangos de calidad de la sección 7 del documento de 
 | Registro de una donación | ≤ 1 min | Del primer mensaje del donante a la confirmación. Con dos mensajes (describir + "sí") es posible. |
 | Tiempo del agente para proponer receptor | ≤ 2 min en el 90 % de los casos | `registro → primera oferta` (no incluye el tiempo humano de respuesta del receptor). |
 | Respuesta del agente al donante | ≤ 5 s | Latencia de `POST /mensajes`. Con motor de reglas son milisegundos; con Claude depende de la red y del modelo. |
-| Precisión de estructuración | ≥ 90 % | `scripts/evaluar_captador.py` sobre un conjunto de mensajes etiquetados. **Los mensajes los escribimos nosotros**, así que es una línea base, no una validación con datos reales. |
+| Precisión de estructuración | ≥ 90 % | `scripts/evaluar_captador.py` sobre 59 mensajes etiquetados (un mensaje cuenta solo si **todos** sus alimentos salen con tipo, cantidad y unidad correctos). **Motor de reglas: lote B (mensajes escritos después de ajustar el motor) 85 % en la primera corrida (17/20) y 90 % tras corregir un error que reveló (18/20); lote A, con el que se ajustó, 100 %** (optimista). Los mensajes los escribimos nosotros: es una línea base, no una validación con datos reales. Motor Claude: **no medido**. |
 | Aceptación a la primera oferta | — | Rescates cuya primera oferta fue aceptada ÷ rescates con oferta. |
 
 ## 5. Datos de prueba (piloto simulado)
@@ -100,17 +100,24 @@ Cumple lo prometido en el alcance del documento de visión (≥ 10 donantes y �
   (sin clave)**: solo está cubierto con pruebas que simulan al cliente.
 - Los datos de impacto de la demo mezclan rescates reales de la sesión con historial simulado.
 
-## 7. Definición de terminado del MVP
+## 7. Definición de terminado y estado de verificación
 
-El MVP se considera entregable cuando se cumplen **todas** estas condiciones:
+| # | Condición | Estado | Cómo se verificó |
+|---|---|---|---|
+| 1 | `pytest` pasa completo en limpio, sin clave de API ni internet | ✅ 244 pruebas | `pytest` |
+| 2 | Con pocos comandos el equipo ve la aplicación funcionando | ✅ | `scripts/demo.ps1` probado levantando la app y consultando `/api/estado` (el de macOS/Linux **no se probó**) |
+| 3 | Se recorren sin errores los escenarios del guion de video | ✅ | Recorridos reales en el navegador integrado y por API: rescate feliz, rechazo con reasignación, riesgo con aprobación humana, vencimiento de oferta y bloqueo por alcohol |
+| 4 | Cada decisión de cada agente aparece en la bitácora de la donación | ✅ | `test_orquestador.py` y vista *Seguimiento* |
+| 5 | El tablero refleja el rescate recién completado | ✅ | `test_api.py` y vista *Impacto* |
+| 6 | El repositorio está en línea con README, documentación, licencia e historial legible | ✅ si ves esta página en GitHub | — |
 
-1. `pytest` pasa completo en limpio, sin clave de API ni internet.
-2. Con tres comandos (instalar, cargar datos, arrancar) el equipo ve la aplicación funcionando.
-3. Se pueden recorrer sin errores los tres escenarios del guion de video (`docs/GUION_VIDEO.md`):
-   rescate feliz, rechazo con reasignación y alimento de riesgo con aprobación humana.
-4. Cada decisión de cada agente aparece en la bitácora de la donación.
-5. El tablero refleja el rescate recién completado.
-6. El repositorio está en línea con README, documentación, licencia e historial de commits legible.
+**Lo que el MVP no pudo verificar** (y por qué):
+
+- El motor **Claude** contra la API real (no había clave): solo pruebas con cliente simulado.
+- La interfaz en **Safari y Firefox** (solo se probó en el navegador integrado, basado en Chromium) y en móvil real (se probó a 375 px emulados).
+- El `demo.sh` de macOS/Linux y la integración continua de GitHub Actions (se escribieron, no se ejecutaron aquí).
+- Rendimiento y escalabilidad (500 donaciones diarias, 20 conversaciones simultáneas).
+- Cualquier cifra frente a datos y usuarios reales.
 
 ## 8. Qué sigue
 
