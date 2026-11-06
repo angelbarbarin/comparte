@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ComParte · Rescate de alimentos con agentes</title>
+  <meta name="description" content="Plataforma agéntica que conecta excedentes de alimentos con quien los necesita (ODS 2, Hambre cero).">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2317663f'/%3E%3Cpath d='M9 17c0-5 4-8 9-8-1 5-3 9-9 8zm5 6c0-4 3-6 8-6-1 4-3 7-8 6z' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+  <header class="cabecera">
+    <div class="marca">
+      <span class="marca-logo" aria-hidden="true">
+        <svg viewBox="0 0 32 32" width="30" height="30"><rect width="32" height="32" rx="8" fill="currentColor"/><path d="M9 17c0-5 4-8 9-8-1 5-3 9-9 8zm5 6c0-4 3-6 8-6-1 4-3 7-8 6z" fill="#fff"/></svg>
+      </span>
+      <div>
+        <h1>ComParte</h1>
+        <p>Rescate de alimentos con agentes · ODS 2 Hambre cero</p>
+      </div>
+    </div>
+    <div class="estado-app" id="estado-app" role="status" aria-live="polite"></div>
+  </header>
+
+  <nav class="pestanas" aria-label="Secciones">
+    <a href="#donar" data-vista="donar">Donar</a>
+    <a href="#seguimiento" data-vista="seguimiento">Seguimiento</a>
+    <a href="#receptor" data-vista="receptor">Receptor</a>
+    <a href="#voluntario" data-vista="voluntario">Voluntario</a>
+    <a href="#impacto" data-vista="impacto">Impacto</a>
+    <a href="#admin" data-vista="admin">Admin</a>
+  </nav>
+
+  <p class="aviso-demo">
+    Modo demostración: los datos del piloto son simulados y no hay inicio de sesión; cada pestaña te deja
+    “actuar como” un donante, receptor, voluntario o administrador.
+  </p>
+
+  <main id="contenido" tabindex="-1">
+    <section id="vista-donar" class="vista" hidden></section>
+    <section id="vista-seguimiento" class="vista" hidden></section>
+    <section id="vista-receptor" class="vista" hidden></section>
+    <section id="vista-voluntario" class="vista" hidden></section>
+    <section id="vista-impacto" class="vista" hidden></section>
+    <section id="vista-admin" class="vista" hidden></section>
+  </main>
+
+  <div id="avisos" class="avisos" role="status" aria-live="polite"></div>
+
+  <footer class="pie">
+    ComParte · Proyecto de Diseño de Software, ITESO · Código abierto (MIT) ·
+    Mapa © colaboradores de <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · Leaflet
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
