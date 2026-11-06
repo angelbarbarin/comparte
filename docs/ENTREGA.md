@@ -55,7 +55,7 @@
 - [ ] El video muestra el recorrido de [`GUION_VIDEO.md`](GUION_VIDEO.md) y abre en una ventana de incógnito.
 - [ ] La entrada de texto tiene las ligas reales (sustituyan `REPO_URL` y `VIDEO_URL`).
 - [ ] El repositorio es accesible para el profesor (público, o privado con acceso concedido).
-- [ ] No hay claves, `.env` ni datos personales en el historial de git (`git log -p | findstr /i "sk-ant"` no debe encontrar nada).
+- [ ] No hay claves, `.env` ni datos personales en el historial de git (`git log -p | findstr /i "sk-ant-"` no debe encontrar nada).
 
 ## Preguntas probables y respuestas honestas
 
