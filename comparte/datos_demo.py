@@ -14,10 +14,23 @@ aproximadas de colonias y centros reales del AMG, solo para que las distancias s
 
 from __future__ import annotations
 
+import random
+from datetime import timedelta
+
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from .modelos import Donante, Receptor, Voluntario
+from . import reloj
+from .agentes.impacto import metricas_de_items
+from .conocimiento.catalogo import CATALOGO
+from .modelos import (
+    Donacion,
+    Donante,
+    EstadoDonacion,
+    Receptor,
+    RegistroImpacto,
+    Voluntario,
+)
 
 DONANTES = [
     # nombre, giro, dirección, municipio, lat, lon, contacto
@@ -71,6 +84,89 @@ VOLUNTARIOS = [
     ("Sofía Mendoza", "camioneta", 200, False, "Tlajomulco", 20.4900, -103.4450, "08:00", "20:00"),
     ("Andrés Navarro", "bicicleta", 10, False, "Guadalajara", 20.6760, -103.3480, "09:00", "19:00"),
 ]
+
+
+# Qué suele donar cada giro: (clave del catálogo, nombre, rango de kg)
+_PLANTILLAS = {
+    "panaderia": [("pan", "pan dulce", (8, 30)), ("pan", "bolillos", (5, 20))],
+    "supermercado": [("fruta", "fruta", (15, 60)), ("verdura", "verdura", (15, 50)),
+                     ("abarrotes", "abarrotes", (10, 40)), ("pan", "pan", (10, 30))],
+    "mercado": [("fruta", "fruta", (20, 80)), ("verdura", "verdura", (20, 80))],
+    "verduleria": [("verdura", "verdura", (15, 50)), ("fruta", "fruta", (10, 30))],
+    "restaurante": [("preparado", "comida preparada", (5, 20)), ("verdura", "verdura", (5, 15))],
+    "hotel": [("preparado", "comida preparada", (8, 30)), ("pan", "pan", (5, 15)), ("fruta", "fruta", (8, 25))],
+    "comedor_institucional": [("preparado", "comida preparada", (10, 40)), ("fruta", "fruta", (8, 20)),
+                              ("pan", "pan", (5, 15))],
+    "tortilleria": [("tortilla", "tortillas", (10, 40))],
+}
+
+
+def sembrar_historial(db: Session, cantidad: int = 40, semilla: int = 2026) -> int:
+    """Crea ``cantidad`` rescates **simulados** ya completados en los últimos 30 días.
+
+    Sirven para que el tablero de impacto no esté vacío durante la demostración (el documento de visión
+    promete un piloto simulado con datos de prueba). Quedan marcados con ``simulada=True``, el tablero
+    los rotula y los KPIs de proceso los ignoran. Es determinista: la misma ``semilla`` da lo mismo.
+    """
+    rng = random.Random(semilla)
+    ahora = reloj.ahora()
+    donantes = list(db.scalars(select(Donante).order_by(Donante.id)))
+    receptores = list(db.scalars(select(Receptor).where(Receptor.verificado.is_(True)).order_by(Receptor.id)))
+    if not donantes or not receptores:
+        return 0
+
+    creadas = 0
+    for _ in range(cantidad):
+        donante = rng.choice(donantes)
+        clave, nombre, (kg_min, kg_max) = rng.choice(_PLANTILLAS.get(donante.giro, _PLANTILLAS["supermercado"]))
+        alimento = CATALOGO[clave]
+        kg = float(rng.randint(kg_min, kg_max))
+        pesos = [r.necesidades.get(alimento.categoria, 0) * (r.capacidad_diaria_kg ** 0.3) for r in receptores]
+        receptor = rng.choices(receptores, weights=pesos)[0] if any(pesos) else rng.choice(receptores)
+
+        creada = (ahora - timedelta(days=rng.randint(1, 30))).replace(
+            hour=rng.randint(9, 20), minute=rng.randint(0, 59), second=0, microsecond=0)
+        items = [{"nombre": nombre, "clave": clave, "categoria": alimento.categoria,
+                  "almacenamiento": alimento.almacenamiento, "riesgo": alimento.riesgo,
+                  "cantidad": kg, "unidad": "kg", "kg": kg, "estimado": False}]
+        donacion = Donacion(
+            donante_id=donante.id, receptor_id=receptor.id, estado=EstadoDonacion.COMPLETADA, items=items,
+            total_kg=kg, categoria_principal=alimento.categoria, requiere_frio=alimento.almacenamiento == "refrigerado",
+            caduca_en=creada + timedelta(hours=alimento.vida_util_horas),
+            recoleccion_desde=creada + timedelta(minutes=15), recoleccion_hasta=creada + timedelta(hours=3),
+            inocuidad={}, simulada=True, creada_en=creada, asignada_en=creada + timedelta(minutes=10),
+            entregada_en=creada + timedelta(minutes=70), completada_en=creada + timedelta(minutes=80),
+        )
+        db.add(donacion)
+        db.flush()
+        m = metricas_de_items(items)
+        db.add(RegistroImpacto(
+            donacion_id=donacion.id, donante_id=donante.id, receptor_id=receptor.id,
+            municipio_origen=donante.municipio, municipio_destino=receptor.municipio,
+            categoria=alimento.categoria, kg=m["kg"], raciones=m["raciones"], personas=m["personas"],
+            co2e_kg=m["co2e_kg"], simulada=True, creado_en=donacion.completada_en,
+        ))
+        creadas += 1
+    db.commit()
+    return creadas
+
+
+def reiniciar_demo(motor, fabrica, hora_demo: str | None = None, con_historial: bool = True) -> dict:
+    """Borra todo y deja la base lista para una demostración limpia.
+
+    Primero se ajusta el reloj (para que el historial quede relativo a la hora de la demo) y luego se
+    cargan actores e historial simulado. Devuelve los conteos.
+    """
+    from .db import reiniciar_tablas
+
+    reloj.restablecer()
+    if hora_demo:
+        reloj.fijar_hora_hoy(hora_demo)
+    reiniciar_tablas(motor)
+    with fabrica() as db:
+        conteos = sembrar_actores(db)
+        conteos["historial"] = sembrar_historial(db) if con_historial else 0
+    return conteos
 
 
 def sembrar_actores(db: Session) -> dict[str, int]:
