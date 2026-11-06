@@ -20,6 +20,7 @@ from .db import Base
 class EstadoDonacion:
     """Ciclo de vida de una donación (lo mueve el orquestador)."""
 
+    REGISTRADA = "registrada"  # el Captador la creó; el orquestador aún no la enruta
     PENDIENTE_VALIDACION = "pendiente_validacion"  # esperando revisión humana (alimento de riesgo)
     RECHAZADA = "rechazada"  # la persona revisora la rechazó
     OFRECIDA = "ofrecida"  # hay una oferta pendiente con un receptor
@@ -35,6 +36,7 @@ class EstadoDonacion:
     FINALES = frozenset({RECHAZADA, COMPLETADA, CADUCADA})
     ACTIVAS = frozenset(
         {
+            REGISTRADA,
             PENDIENTE_VALIDACION,
             OFRECIDA,
             SIN_RECEPTOR,
@@ -170,7 +172,7 @@ class Donacion(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     donante_id: Mapped[int] = mapped_column(ForeignKey("donantes.id"))
     conversacion_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
-    estado: Mapped[str] = mapped_column(String(30), default=EstadoDonacion.PENDIENTE_VALIDACION)
+    estado: Mapped[str] = mapped_column(String(30), default=EstadoDonacion.REGISTRADA)
 
     # [{"nombre","clave","categoria","cantidad","unidad","kg"}]
     items: Mapped[list] = mapped_column(JSON, default=list)
