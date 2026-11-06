@@ -150,7 +150,7 @@ _SINONIMOS_UNIDAD: dict[str, tuple[str, ...]] = {
     "costal": ("costal", "costales", "saco", "sacos"),
     "paquete": ("paquete", "paquetes"),
     "botella": ("botella", "botellas"),
-    "porcion": ("porcion", "porciones", "racion", "raciones"),
+    "porcion": ("porcion", "porciones", "racion", "raciones", "persona", "personas"),
 }
 UNIDAD_CANONICA: dict[str, str] = {s: u for u, ss in _SINONIMOS_UNIDAD.items() for s in ss}
 

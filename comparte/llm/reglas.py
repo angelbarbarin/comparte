@@ -22,7 +22,7 @@ import re
 import unicodedata
 from datetime import datetime
 
-from ..conocimiento.catalogo import UNIDAD_CANONICA, buscar_alimentos
+from ..conocimiento.catalogo import UNIDAD_CANONICA, Coincidencia, buscar_alimentos
 from .base import Extraccion, Imagen, ItemExtraido
 from .fechas_es import NUMEROS, analizar_tiempos
 
@@ -30,10 +30,11 @@ _PALABRAS_NUM = "|".join(NUMEROS)
 _UNIDADES = "|".join(sorted(map(re.escape, UNIDAD_CANONICA), key=len, reverse=True))
 _NUMERO = rf"\d{{1,3}}(?:,\d{{3}})+(?:\.\d+)?|\d+(?:[.,]\d+)?|{_PALABRAS_NUM}"
 
-# Un número justo antes de un alimento, sin unidad: "40 bolillos" => 40 piezas.
-_NUMERO_SUELTO = re.compile(rf"(?<![a-z0-9.,])({_NUMERO})\s+$")
+# Un número justo antes de un alimento, sin unidad: "40 bolillos" => 40 piezas. Con "de" ("3 cajas de
+# jitomate y 2 de cebolla") se hereda la unidad de la cantidad anterior.
+_NUMERO_SUELTO = re.compile(rf"(?<![a-z0-9.,])({_NUMERO})\s+(de\s+)?$")
 
-_KILO_Y_MEDIO = re.compile(r"(?<![a-z0-9])(\d+|un|uno|una) kilos? y medio(?![a-z0-9])")
+_KILO_Y_MEDIO = re.compile(r"(?<![a-z0-9])(?:(\d+|un|uno|una)\s+)?kilos?\s+y\s+medio(?![a-z0-9])")
 _CANTIDAD = re.compile(rf"(?<![a-z0-9.,])({_NUMERO})\s*({_UNIDADES})(?![a-z0-9])")
 
 # Palabras que no pueden ser el nombre de un alimento desconocido ("20 kg que tengo desde ayer").
@@ -102,13 +103,26 @@ def _condiciones(t: str) -> list[str]:
     return encontradas
 
 
+def _fusionar_adyacentes(coincidencias: list, t: str) -> list:
+    """Une alimentos del mismo tipo separados solo por "de/del/en": "pechuga de pollo", "atún en lata"."""
+    fusionadas: list = []
+    for c in coincidencias:
+        if fusionadas:
+            a = fusionadas[-1]
+            if a.alimento.clave == c.alimento.clave and t[a.fin:c.inicio].strip() in ("", "de", "del", "en"):
+                fusionadas[-1] = Coincidencia(a.alimento, t[a.inicio:c.fin], a.inicio, c.fin)
+                continue
+        fusionadas.append(c)
+    return fusionadas
+
+
 def _items(orig: str, t: str) -> tuple[list[ItemExtraido], list[tuple[int, int]]]:
     """Cantidades y alimentos de ``t`` emparejados por cercanía. Devuelve también los tramos usados."""
     eventos: list[tuple[int, str, object]] = []  # (posición, tipo, datos)
     ocupados: list[tuple[int, int]] = []
 
     for m in _KILO_Y_MEDIO.finditer(t):
-        base = float(NUMEROS.get(m.group(1), m.group(1)))
+        base = float(NUMEROS.get(m.group(1), m.group(1))) if m.group(1) else 1.0  # "kilo y medio" = 1.5
         eventos.append((m.start(), "Q", (m.start(), m.end(), base + 0.5, "kg")))
         ocupados.append(m.span())
     for m in _CANTIDAD.finditer(t):
@@ -119,17 +133,25 @@ def _items(orig: str, t: str) -> tuple[list[ItemExtraido], list[tuple[int, int]]
 
     # Los alimentos se buscan con las cantidades en blanco ("latas" es unidad, no alimento).
     t_sin_cantidades = _blanquear(t, ocupados)
-    for c in buscar_alimentos(t_sin_cantidades):
+    for c in _fusionar_adyacentes(buscar_alimentos(t_sin_cantidades), t_sin_cantidades):
         eventos.append((c.inicio, "F", c))
-        # "40 bolillos": un número pegado al alimento y sin unidad se cuenta como piezas.
+        # "40 bolillos": un número pegado al alimento y sin unidad se cuenta como piezas;
+        # "2 de cebolla" hereda la unidad de la cantidad anterior ("3 cajas de jitomate y 2 de cebolla").
         m = _NUMERO_SUELTO.search(t_sin_cantidades[:c.inicio])
         if m:
-            eventos.append((m.start(1), "Q", (m.start(1), m.end(1), _numero(m.group(1)), "pieza")))
+            unidad = "pieza"
+            if m.group(2):
+                previas = [e for e in eventos if e[1] == "Q" and e[0] < m.start(1)]
+                if previas:
+                    unidad = max(previas, key=lambda e: e[0])[2][3]
+            eventos.append((m.start(1), "Q", (m.start(1), m.end(1), _numero(m.group(1)), unidad)))
             ocupados.append((m.start(1), m.end(1)))
             t_sin_cantidades = _blanquear(t_sin_cantidades, [(m.start(1), m.end(1))])
     eventos.sort(key=lambda e: e[0])
 
     items: list[ItemExtraido] = []
+    claves: list[str] = []  # tipo de alimento de cada item (paralelo a ``items``)
+    fin_ultimo = -2  # índice del último evento que formó parte del último item
     usados: set[int] = set()
     spans: list[tuple[int, int]] = []
     for i, (_, tipo, datos) in enumerate(eventos):
@@ -137,8 +159,17 @@ def _items(orig: str, t: str) -> tuple[list[ItemExtraido], list[tuple[int, int]]
             continue
         if tipo == "F":
             c = datos
-            items.append(ItemExtraido(nombre=orig[c.inicio:c.fin].lower()))
+            nombre = orig[c.inicio:c.fin].lower()
             spans.append((c.inicio, c.fin))
+            # "15 kg de verdura (zanahoria, calabaza)": un alimento sin cantidad del mismo tipo que el
+            # anterior (con cantidad) y pegado a él es un detalle, no otro producto.
+            if (items and items[-1].cantidad is not None and claves[-1] == c.alimento.clave
+                    and c.alimento.clave != "desconocido" and i == fin_ultimo + 1):
+                items[-1].nombre = f"{items[-1].nombre}, {nombre}"
+            else:
+                items.append(ItemExtraido(nombre=nombre))
+                claves.append(c.alimento.clave)
+            fin_ultimo = i
             continue
 
         ini, fin, cantidad, unidad = datos
@@ -149,12 +180,15 @@ def _items(orig: str, t: str) -> tuple[list[ItemExtraido], list[tuple[int, int]]
             hueco = t[fin:c.inicio]
             if len(hueco.strip()) <= 30 and not re.search(r"[\d,.;]", hueco):
                 items.append(ItemExtraido(orig[c.inicio:c.fin].lower(), cantidad, unidad))
+                claves.append(c.alimento.clave)
                 usados.add(i + 1)
+                fin_ultimo = i + 1
                 spans.append((c.inicio, c.fin))
                 continue
         anterior = items[-1] if items else None
         if anterior and anterior.cantidad is None and eventos[i - 1][1] == "F":
             anterior.cantidad, anterior.unidad = cantidad, unidad  # "pan dulce, 25 kg"
+            fin_ultimo = i
             continue
         m = re.match(r"\s*de\s+([a-z]+(?: [a-z]+){0,2})", t[fin:])
         if m:  # alimento fuera del catálogo: "2 charolas de gelatina"
@@ -167,9 +201,11 @@ def _items(orig: str, t: str) -> tuple[list[ItemExtraido], list[tuple[int, int]]
                 nombre = " ".join(palabras)
                 inicio_nombre = fin + m.start(1)
                 items.append(ItemExtraido(orig[inicio_nombre:inicio_nombre + len(nombre)].lower(), cantidad, unidad))
+                claves.append("")
                 spans.append((inicio_nombre, inicio_nombre + len(nombre)))
                 continue
         items.append(ItemExtraido(None, cantidad, unidad))  # cantidad suelta ("20 kg")
+        claves.append("")
     return items, spans
 
 

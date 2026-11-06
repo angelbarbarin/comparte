@@ -50,6 +50,8 @@ class TestCantidadesYAlimentos:
 
     def test_kilo_y_medio(self):
         assert tuplas(extraer("un kilo y medio de queso")) == [("queso", 1.5, "kg")]
+        assert tuplas(extraer("kilo y medio de jamón")) == [("jamón", 1.5, "kg")]
+        assert tuplas(extraer("2 kilos y medio de arroz")) == [("arroz", 2.5, "kg")]
 
     def test_piezas(self):
         assert tuplas(extraer("50 piezas de bolillo")) == [("bolillo", 50.0, "pieza")]
@@ -96,6 +98,28 @@ class TestCantidadesYAlimentos:
         assert tuplas(ext) == [("bolillos", 40.0, "pieza"), ("pan dulce", 3.0, "charola")]
         assert ext.caduca_en == HOY_FIN  # la hora de recolección NO es la caducidad
         assert ext.recoleccion_desde == datetime(2026, 11, 10, 19, 0)
+
+    def test_la_unidad_se_hereda_en_enumeraciones_elipticas(self):
+        # "3 cajas de jitomate y 2 de cebolla": las 2 también son cajas
+        assert tuplas(extraer("3 cajas de jitomate y 2 de cebolla")) == [("jitomate", 3.0, "caja"), ("cebolla", 2.0, "caja")]
+        assert tuplas(extraer("tres charolas de pan dulce y una de bolillos")) == [
+            ("pan dulce", 3.0, "charola"), ("bolillos", 1.0, "charola")]
+
+    def test_dos_palabras_del_mismo_alimento_son_un_solo_item(self):
+        assert tuplas(extraer("10 kg de pechuga de pollo")) == [("pechuga de pollo", 10.0, "kg")]
+        assert tuplas(extraer("3 kg de atún en lata")) == [("atún en lata", 3.0, "kg")]
+
+    def test_los_ejemplos_entre_parentesis_son_detalles_no_otros_productos(self):
+        ext = extraer("15 kg de verdura variada (zanahoria, calabaza, chayote)")
+        assert len(ext.items) == 1 and ext.items[0].cantidad == 15.0
+        assert "zanahoria" in ext.items[0].nombre and "chayote" in ext.items[0].nombre
+        assert len(extraer("80 kg de fruta entre mango y papaya").items) == 1
+
+    def test_alimentos_de_distinto_tipo_si_son_items_separados(self):
+        assert [i.cantidad for i in extraer("25 kilos de pan y fruta").items] == [25.0, None]
+
+    def test_personas_cuenta_como_porciones(self):
+        assert tuplas(extraer("Sobró comida preparada para 30 personas")) == [("comida preparada", 30.0, "porcion")]
 
     def test_un_rango_de_cantidades_no_se_confunde_con_horario(self):
         ext = extraer("de 25 a 30 kg de arroz")
