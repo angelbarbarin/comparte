@@ -1,0 +1,28 @@
+# Entorno virtual y cachés de Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+
+# Datos locales de ejecución (base SQLite, fotos subidas)
+data/
+
+# Secretos y configuración local
+.env
+.env.*
+!.env.example
+
+# Editores / herramientas
+.idea/
+.vscode/
+.claude/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Archivos temporales de Office
+~$*.docx
+~$*.pptx
